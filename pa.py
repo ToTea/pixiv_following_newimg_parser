@@ -24,12 +24,20 @@ opener = urllib.request.build_opener(handler)
 
 urls = []
 
-with open('downloaded.txt', 'r') as f:
-	downloaded = f.readlines();
-	downloaded = [x.strip() for x in downloaded]
-with open('latest.txt', 'r') as f:
-	latest = f.readline().strip();
-	newlatest = latest
+if os.path.isfile('downloaded.txt'):
+        with open('downloaded.txt', 'r') as f:
+	            downloaded = f.readlines();
+	            downloaded = [x.strip() for x in downloaded]
+else:
+        downloaded = []
+
+if os.path.isfile('latest.txt'):
+        with open('latest.txt', 'r') as f:
+	            latest = f.readline().strip();
+	            newlatest = latest
+else:
+        latest = '=-1'
+        newlatest = latest
 
 res = opener.open('http://www.pixiv.net')
 soup = BeautifulSoup(res.read(), 'html.parser')
