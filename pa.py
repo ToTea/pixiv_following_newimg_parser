@@ -218,10 +218,10 @@ for i, url in enumerate(urls):
 	downloaded_file.write(url + '\n')
 	downloaded_file.flush()
 
+downloaded_file.close()
+
 with open('latest.txt', 'w') as f:
 	f.write(newlatest + '\n')
-with open('downloaded.txt', 'w') as f:
-	pass
 
 print('Jobs done.')
 cookie.save('cookie.txt')
