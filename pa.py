@@ -10,7 +10,17 @@ import getpass
 import sys
 
 
-invalid_character = '\/><"|?*:'
+invalid_characters = {
+        '\\': '﹨',
+        '/': '∕',
+        '>': '＞',
+        '<': '＜',
+        '"': '”',
+        '|': '｜',
+        '?': '？',
+        '*': '＊',
+        ':': '：'
+}
 
 if not os.path.exists('download'):
 	os.makedirs('download')
@@ -92,9 +102,9 @@ for i, url in enumerate(urls):
 
 	author = soup.select('.profile-unit .user')[0].string
 	title = soup.select('.work-info .title')[0].string
-	for c in invalid_character:
-		author = author.replace(c, '_')
-		title = title.replace(c, '_')
+	for original, replacement in invalid_characters.items():
+		author = author.replace(original, replacement)
+		title = title.replace(original, replacement)
 	
 	# 動圖
 	m = re.search('http:\\\/\\\/i\d.pixiv.net\\\/img-zip-ugoira\\\/img\\\/\d+\\\/\d+\\\/\d+\\\/\d+\\\/\d+\\\/\d+\\\/[0-9a-z_]+1920x1080.zip', str(soup))
