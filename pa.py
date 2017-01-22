@@ -107,7 +107,7 @@ for i, url in enumerate(urls):
 		title = title.replace(original, replacement)
 	
 	# 動圖
-	m = re.search('http:\\\/\\\/i\d.pixiv.net\\\/img-zip-ugoira\\\/img\\\/\d+\\\/\d+\\\/\d+\\\/\d+\\\/\d+\\\/\d+\\\/[0-9a-z_]+1920x1080.zip', str(soup))
+	m = re.search(r'http:\\/\\/i\d.pixiv.net\\/img-zip-ugoira\\/img\\/\d+\\/\d+\\/\d+\\/\d+\\/\d+\\/\d+\\/[0-9a-z_]+1920x1080.zip', str(soup))
 	more = soup.select('.works_display ._work')
 	if m != None:
 		img = m.group(0).replace('\\', '')
