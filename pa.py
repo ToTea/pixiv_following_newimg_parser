@@ -10,7 +10,17 @@ import getpass
 import sys
 
 
-invalid_character = '\/><"|?*:'
+invalid_characters = {
+        '\\': '﹨',
+        '/': '∕',
+        '>': '＞',
+        '<': '＜',
+        '"': '”',
+        '|': '｜',
+        '?': '？',
+        '*': '＊',
+        ':': '：'
+}
 
 if not os.path.exists('download'):
 	os.makedirs('download')
@@ -24,12 +34,20 @@ opener = urllib.request.build_opener(handler)
 
 urls = []
 
-with open('downloaded.txt', 'r') as f:
-	downloaded = f.readlines();
-	downloaded = [x.strip() for x in downloaded]
-with open('latest.txt', 'r') as f:
-	latest = f.readline().strip();
-	newlatest = latest
+if os.path.isfile('downloaded.txt'):
+        with open('downloaded.txt', 'r') as f:
+	            downloaded = f.readlines();
+	            downloaded = [x.strip() for x in downloaded]
+else:
+        downloaded = []
+
+if os.path.isfile('latest.txt'):
+        with open('latest.txt', 'r') as f:
+	            latest = f.readline().strip();
+	            newlatest = latest
+else:
+        latest = '=-1'
+        newlatest = latest
 
 res = opener.open('http://www.pixiv.net')
 soup = BeautifulSoup(res.read(), 'html.parser')
@@ -84,12 +102,12 @@ for i, url in enumerate(urls):
 
 	author = soup.select('.profile-unit .user')[0].string
 	title = soup.select('.work-info .title')[0].string
-	for c in invalid_character:
-		author = author.replace(c, '_')
-		title = title.replace(c, '_')
+	for original, replacement in invalid_characters.items():
+		author = author.replace(original, replacement)
+		title = title.replace(original, replacement)
 	
 	# 動圖
-	m = re.search('http:\\\/\\\/i\d.pixiv.net\\\/img-zip-ugoira\\\/img\\\/\d+\\\/\d+\\\/\d+\\\/\d+\\\/\d+\\\/\d+\\\/[0-9a-z_]+1920x1080.zip', str(soup))
+	m = re.search(r'http:\\/\\/i\d.pixiv.net\\/img-zip-ugoira\\/img\\/\d+\\/\d+\\/\d+\\/\d+\\/\d+\\/\d+\\/[0-9a-z_]+1920x1080.zip', str(soup))
 	more = soup.select('.works_display ._work')
 	if m != None:
 		img = m.group(0).replace('\\', '')
@@ -200,10 +218,10 @@ for i, url in enumerate(urls):
 	downloaded_file.write(url + '\n')
 	downloaded_file.flush()
 
+downloaded_file.close()
+
 with open('latest.txt', 'w') as f:
 	f.write(newlatest + '\n')
-with open('downloaded.txt', 'w') as f:
-	pass
 
 print('Jobs done.')
 cookie.save('cookie.txt')
