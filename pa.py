@@ -100,14 +100,16 @@ for i, url in enumerate(urls):
 	res = opener.open(url)
 	soup = BeautifulSoup(res.read(), 'html.parser')
 
-	author = soup.select('.profile-unit .user')[0].string
+	author = soup.select('.profile .user-name')[0].string
 	title = soup.select('.work-info .title')[0].string
 	for original, replacement in invalid_characters.items():
 		author = author.replace(original, replacement)
 		title = title.replace(original, replacement)
 	
 	# 動圖
-	m = re.search(r'http:\\/\\/i\d.pixiv.net\\/img-zip-ugoira\\/img\\/\d+\\/\d+\\/\d+\\/\d+\\/\d+\\/\d+\\/[0-9a-z_]+1920x1080.zip', str(soup))
+	m = re.search(r'https:\\/\\/i\d.pixiv.net\\/img-zip-ugoira\\/img\\/\d+\\/\d+\\/\d+\\/\d+\\/\d+\\/\d+\\/[0-9a-z_]+1920x1080.zip', str(soup))
+	if m == None:
+		m = re.search(r'https:\\/\\/i\d?.pximg.net\\/img-zip-ugoira\\/img\\/\d+\\/\d+\\/\d+\\/\d+\\/\d+\\/\d+\\/[0-9a-z_]+1920x1080.zip', str(soup))
 	more = soup.select('.works_display ._work')
 	if m != None:
 		img = m.group(0).replace('\\', '')
@@ -222,6 +224,9 @@ downloaded_file.close()
 
 with open('latest.txt', 'w') as f:
 	f.write(newlatest + '\n')
+
+with open('downloaded.txt', 'w') as f:
+	pass
 
 print('Jobs done.')
 cookie.save('cookie.txt')
